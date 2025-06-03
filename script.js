@@ -325,11 +325,35 @@ function updateTaskOrder() {
 
 // Filter functionality
 function setFilter(filter) {
-    currentFilter = filter;
+    // Remove active class from all buttons
     filterButtons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.filter === filter);
+        btn.classList.remove('active');
     });
+    
+    // Add active class to selected filter
+    const activeButton = Array.from(filterButtons).find(btn => btn.dataset.filter === filter);
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
+    
+    currentFilter = filter;
     renderTasks();
+}
+
+function toggleTaskList(button) {
+    // Toggle only the clicked button's collapsed state
+    button.classList.toggle('collapsed');
+    
+    // Update task list visibility based on active filter
+    const taskList = document.getElementById('task-list');
+    const activeFilter = Array.from(filterButtons).find(btn => btn.dataset.filter === currentFilter);
+    
+    // If the active filter's button is collapsed, collapse the task list
+    if (activeFilter && activeFilter.classList.contains('collapsed')) {
+        taskList.classList.add('collapsed');
+    } else {
+        taskList.classList.remove('collapsed');
+    }
 }
 
 function shouldShowTask(task) {
@@ -379,10 +403,27 @@ function renderTasks() {
     if (!taskList) return;
     
     taskList.innerHTML = '';
-    const filteredTasks = tasks
-        .sort((a, b) => a.order - b.order)
-        .filter(shouldShowTask);
+    let filteredTasks = tasks;
     
+    // First sort by order
+    filteredTasks = filteredTasks.sort((a, b) => a.order - b.order);
+    
+    // For "all" view, sort by completion status
+    if (currentFilter === 'all') {
+        filteredTasks = filteredTasks.sort((a, b) => {
+            // First sort by completion status (active tasks first)
+            if (a.completed !== b.completed) {
+                return a.completed ? 1 : -1;
+            }
+            // Then by order within each status group
+            return a.order - b.order;
+        });
+    }
+    
+    // Then apply the filter
+    filteredTasks = filteredTasks.filter(shouldShowTask);
+    
+    // Render the sorted and filtered tasks
     filteredTasks.forEach(task => {
         const taskElement = createTaskElement(task);
         taskList.appendChild(taskElement);
@@ -447,14 +488,21 @@ function initializeApp() {
     initializeTheme();
     loadSavedSettings();
     
-    // Set initial filter state
+    // Set initial filter state but keep everything collapsed
     filterButtons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.filter === 'all');
+        btn.classList.add('collapsed');
+        if (btn.dataset.filter === 'active') {
+            btn.classList.add('active');
+        }
     });
-    currentFilter = 'all';
+    currentFilter = 'active';
     
-    // Render tasks with current filter
-    renderTasks();
+    // Start with task list collapsed
+    const taskList = document.getElementById('task-list');
+    taskList.classList.add('collapsed');
+    
+    // Load tasks but keep them collapsed
+    loadTasks();
     updateDisplay();
 }
 
@@ -491,7 +539,17 @@ taskInput.addEventListener('keypress', (e) => {
 saveTaskEdit.addEventListener('click', handleTaskEdit);
 cancelTaskEdit.addEventListener('click', hideEditTaskModal);
 filterButtons.forEach(button => {
-    button.addEventListener('click', () => setFilter(button.dataset.filter));
+    button.addEventListener('click', (e) => {
+        // If clicking the active filter, just toggle collapse
+        if (button.classList.contains('active')) {
+            toggleTaskList(button);
+        } else {
+            // If switching filters, set new filter and ensure it's expanded
+            setFilter(button.dataset.filter);
+            button.classList.remove('collapsed');
+            document.getElementById('task-list').classList.remove('collapsed');
+        }
+    });
 });
 clearTasksButton.addEventListener('click', clearAllTasks);
 

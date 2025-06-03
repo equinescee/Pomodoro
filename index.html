@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Trigger new deployment -->
     <title>Pomodoro Timer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -46,11 +47,17 @@
                 <button id="add-task">Add Task</button>
             </div>
             <div class="task-filters">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="active">Active</button>
-                <button class="filter-btn" data-filter="completed">Completed</button>
+                <button class="filter-btn active" data-filter="active">
+                    Active <span class="collapse-icon">▼</span>
+                </button>
+                <button class="filter-btn" data-filter="completed">
+                    Completed <span class="collapse-icon">▼</span>
+                </button>
+                <button class="filter-btn" data-filter="all">
+                    All <span class="collapse-icon">▼</span>
+                </button>
             </div>
-            <div id="task-list" class="sortable-list"></div>
+            <div id="task-list" class="sortable-list expanded"></div>
             
             <!-- Task Template (hidden) -->
             <template id="task-template">

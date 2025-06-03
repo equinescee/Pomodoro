@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="theme-toggle">
+            <button id="theme-toggle" aria-label="Toggle dark mode">
+                🌙
+            </button>
+        </div>
+        <div class="settings-toggle">
+            <button id="settings-toggle" aria-label="Open settings">
+                ⚙️
+            </button>
+        </div>
+        <h1>Pomodoro Timer</h1>
+        <div class="timer" id="timer">25:00</div>
+        <div class="controls">
+            <button id="start">Start</button>
+            <button id="pause">Pause</button>
+            <button id="reset">Reset</button>
+        </div>
+        <div class="timer-type">
+            <button id="pomodoro" class="active">Pomodoro</button>
+            <button id="short-break">Short Break</button>
+            <button id="long-break">Long Break</button>
+        </div>
+        <div class="task-section">
+            <div class="task-section-header">
+                <h2>Current Task</h2>
+                <button id="clear-tasks" class="danger-button">Clear All Tasks</button>
+            </div>
+            <div class="task-input-group">
+                <input type="text" id="task-input" placeholder="What are you working on?">
+                <select id="task-category">
+                    <option value="work">Work</option>
+                    <option value="learning">Learning</option>
+                    <option value="relaxation">Relaxation</option>
+                    <option value="other">Other</option>
+                </select>
+                <button id="add-task">Add Task</button>
+            </div>
+            <div class="task-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+            <div id="task-list" class="sortable-list"></div>
+            
+            <!-- Task Template (hidden) -->
+            <template id="task-template">
+                <div class="task-item" draggable="true">
+                    <div class="task-drag-handle">⋮⋮</div>
+                    <div class="task-content">
+                        <div class="task-header">
+                            <input type="checkbox" class="task-checkbox">
+                            <span class="task-text"></span>
+                            <span class="task-category"></span>
+                        </div>
+                        <div class="task-details">
+                            <span class="task-timestamp"></span>
+                            <span class="task-pomodoros">🍅 0</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="edit-task" aria-label="Edit task">✏️</button>
+                        <button class="delete-task" aria-label="Delete task">❌</button>
+                    </div>
+                </div>
+            </template>
+            
+            <!-- Edit Task Modal -->
+            <div id="edit-task-modal" class="modal">
+                <div class="modal-content">
+                    <h2>Edit Task</h2>
+                    <div class="edit-task-form">
+                        <div class="form-group">
+                            <label for="edit-task-text">Task Description</label>
+                            <input type="text" id="edit-task-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-task-category">Category</label>
+                            <select id="edit-task-category">
+                                <option value="work">Work</option>
+                                <option value="learning">Learning</option>
+                                <option value="relaxation">Relaxation</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="modal-buttons">
+                            <button id="save-task-edit">Save</button>
+                            <button id="cancel-task-edit">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="stats-section">
+            <h2>Today's Progress</h2>
+            <div id="stats-display">
+                <div>Completed Pomodoros: <span id="pomodoro-count">0</span></div>
+                <div>Total Focus Time: <span id="focus-time">0m</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <h2>Timer Settings</h2>
+            <div class="settings-group">
+                <label for="pomodoro-duration">Pomodoro Duration (minutes)</label>
+                <input type="number" id="pomodoro-duration" min="1" max="60" value="25">
+            </div>
+            <div class="settings-group">
+                <label for="short-break-duration">Short Break Duration (minutes)</label>
+                <input type="number" id="short-break-duration" min="1" max="30" value="5">
+            </div>
+            <div class="settings-group">
+                <label for="long-break-duration">Long Break Duration (minutes)</label>
+                <input type="number" id="long-break-duration" min="1" max="60" value="15">
+            </div>
+            <div class="settings-group">
+                <label for="notification-sound">Notification Sound</label>
+                <select id="notification-sound">
+                    <option value="bell">Bell</option>
+                    <option value="digital">Digital</option>
+                    <option value="gentle">Gentle</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button id="save-settings">Save</button>
+                <button id="close-settings">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="notification" src="sounds/bell.mp3"></audio>
+    <script src="script.js"></script>
+</body>
+</html> 

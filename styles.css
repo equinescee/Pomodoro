@@ -1,0 +1,440 @@
+:root[data-theme="light"] {
+    --bg-color: #f5f5f5;
+    --container-bg: white;
+    --text-color: #2c3e50;
+    --button-bg: #e9ecef;
+    --button-text: #2c3e50;
+    --button-hover: #dee2e6;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --modal-overlay: rgba(0, 0, 0, 0.5);
+    --input-bg: white;
+    --input-border: #dee2e6;
+    --task-bg: #f8f9fa;
+    --category-work: #9b59b6;
+    --category-learning: #1abc9c;
+    --category-relaxation: #3498db;
+    --category-other: #95a5a6;
+    --completed-task-bg: #f0f0f0;
+    --completed-task-color: #95a5a6;
+}
+
+:root[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --container-bg: #2d2d2d;
+    --text-color: #e0e0e0;
+    --button-bg: #404040;
+    --button-text: #e0e0e0;
+    --button-hover: #505050;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --modal-overlay: rgba(0, 0, 0, 0.7);
+    --input-bg: #404040;
+    --input-border: #505050;
+    --task-bg: #363636;
+    --category-work: #8e44ad;
+    --category-learning: #16a085;
+    --category-relaxation: #2980b9;
+    --category-other: #7f8c8d;
+    --completed-task-bg: #2a2a2a;
+    --completed-task-color: #7f8c8d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    background-color: var(--container-bg);
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 20px var(--shadow-color);
+    text-align: center;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    max-width: 600px;
+    width: 90%;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.settings-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 4rem;
+}
+
+#theme-toggle, #settings-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+#theme-toggle:hover, #settings-toggle:hover {
+    transform: scale(1.1);
+}
+
+h1, h2 {
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.timer {
+    font-size: 6rem;
+    font-weight: bold;
+    margin: 2rem 0;
+    color: var(--text-color);
+}
+
+.controls {
+    margin: 1rem 0;
+}
+
+button {
+    padding: 0.8rem 1.5rem;
+    margin: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+
+button:hover {
+    background-color: var(--button-hover);
+    transform: translateY(-2px);
+}
+
+#start {
+    background-color: #2ecc71;
+    color: white;
+}
+
+#start:hover {
+    background-color: #27ae60;
+}
+
+#pause {
+    background-color: #e74c3c;
+    color: white;
+}
+
+#pause:hover {
+    background-color: #c0392b;
+}
+
+#reset {
+    background-color: #3498db;
+    color: white;
+}
+
+#reset:hover {
+    background-color: #2980b9;
+}
+
+.timer-type button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+
+.timer-type button.active {
+    background-color: var(--text-color);
+    color: var(--container-bg);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-overlay);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--container-bg);
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 500px;
+    width: 90%;
+}
+
+.settings-group {
+    margin: 1rem 0;
+    text-align: left;
+}
+
+.settings-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.settings-group input,
+.settings-group select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--input-border);
+    border-radius: 0.5rem;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Task Section Styles */
+.task-section {
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.task-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.danger-button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.danger-button:hover {
+    background-color: #c0392b;
+}
+
+.task-input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+#task-input {
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid var(--input-border);
+    border-radius: 0.5rem;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+#task-category {
+    width: 120px;
+    padding: 0.8rem;
+    border: 1px solid var(--input-border);
+    border-radius: 0.5rem;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+.task-filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    cursor: pointer;
+}
+
+.filter-btn.active {
+    background-color: var(--text-color);
+    color: var(--container-bg);
+}
+
+#task-list {
+    margin-top: 1rem;
+}
+
+.task-item {
+    background-color: var(--task-bg);
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 0.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.task-item.dragging {
+    opacity: 0.5;
+    background-color: var(--button-hover);
+}
+
+.task-item.completed {
+    background-color: var(--completed-task-bg);
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    color: var(--completed-task-color);
+}
+
+.task-drag-handle {
+    cursor: grab;
+    color: var(--button-text);
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.task-drag-handle:hover {
+    opacity: 1;
+}
+
+.task-content {
+    flex: 1;
+}
+
+.task-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.task-checkbox {
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+}
+
+.task-text {
+    flex: 1;
+    color: var(--text-color);
+}
+
+.task-category {
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.3rem;
+    font-size: 0.8rem;
+    color: white;
+}
+
+.task-category[data-category="work"] {
+    background-color: var(--category-work);
+}
+
+.task-category[data-category="learning"] {
+    background-color: var(--category-learning);
+}
+
+.task-category[data-category="relaxation"] {
+    background-color: var(--category-relaxation);
+}
+
+.task-category[data-category="other"] {
+    background-color: var(--category-other);
+}
+
+.task-details {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--button-text);
+    opacity: 0.8;
+}
+
+.task-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.task-actions button {
+    background: none;
+    border: none;
+    padding: 0.3rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.task-actions button:hover {
+    opacity: 1;
+    transform: none;
+}
+
+/* Edit Task Modal Styles */
+.edit-task-form {
+    margin-top: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--input-border);
+    border-radius: 0.5rem;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+/* Stats Section Styles */
+.stats-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--input-border);
+}
+
+#stats-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+#stats-display div {
+    background-color: var(--task-bg);
+    padding: 1rem;
+    border-radius: 0.5rem;
+} 
